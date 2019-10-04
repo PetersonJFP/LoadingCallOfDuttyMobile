@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body{
+            background-color: grey;
+        }
+        .box{
+            width: 150px;
+            height: 60px;
+            border: 1px solid white;
+            padding: 10px;
+            background-color: rgba(0,0,0,0.6);
+            z-index: 0;
+        }
+        .box p{
+            font-size: 34px;
+            text-align: center;
+            line-height: 60px;
+            margin: 0;
+            font-weight: bolder;
+            color: white;
+            z-index: 1;
+        }
+        #trace{
+            height: 76px;
+            width: 4px;
+            background-color: rgba(255,255,255,0.6);
+            float: left;
+            position: relative;
+            top: -8px;
+        }
+        #loadingBar{
+            width: 320px;
+            height: 25px;
+            border: 1px solid white;
+            margin-top: 15px;
+            background-color: rgba(0,0,0,0.6);
+        }
+        #loaded{
+            width: 316px;
+            height: 21px;
+            background-color: white;
+            position: relative;
+            top: 2px;
+            left: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div id="trace" style="left: -8px"></div>
+        <p id="percent">0%</p>
+    </div>
+    <div id="loadingBar"><div id="loaded"></div></div>
+    <script>
+        let trace = document.getElementById('trace')
+        let percent = document.getElementById('percent')
+        let loaded = document.getElementById('loaded')
+        let isUp = true
+        var upPercent = ''
+
+        function pxToNumber(string) {
+            return Number(string.replace('px', ''))
+        }
+
+        function percentToNumber(string) {
+            return Number(string.replace('%', ''))
+        }
+
+        function changeTraceLeft() {
+            if (pxToNumber(trace.style.left) === 154) {
+                isUp = false
+            }
+            if (isUp) {
+                let newLeft = `${pxToNumber(trace.style.left) + 1}px`
+                trace.style.left = newLeft
+            } else {
+                if (pxToNumber(trace.style.left) === -8) {
+                    isUp = true
+                }
+                let newLeft = `${pxToNumber(trace.style.left) - 1}px`
+                trace.style.left = newLeft
+            }
+        }
+
+        function increasePercent() {
+            let innerText = percent.innerText
+            if (percentToNumber(innerText) == 100) {
+                clearInterval(upPercent)
+                alert('carregado')
+            } else {
+                let n = percentToNumber(innerText)
+                let n2 = n + 1
+                let newPercent = `${n2}%`
+                percent.innerText = newPercent
+                loaded.style.width = `${n2 * 314 / 100}px`
+            }
+        }
+
+        function main() {
+            window.setInterval('changeTraceLeft()', 10)
+            upPercent = window.setInterval('increasePercent()', 100)
+        }
+
+        main()
+    </script>
+</body>
+</html>
